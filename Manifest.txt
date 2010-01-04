@@ -1,0 +1,8 @@
+.autotest
+History.txt
+Manifest.txt
+README.txt
+Rakefile
+bin/table_parser
+lib/table_parser.rb
+test/test_table_parser.rb
