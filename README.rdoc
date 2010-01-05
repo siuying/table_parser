@@ -1,4 +1,4 @@
-= TableParser
+h1. TableParser
 
 == DESCRIPTION:
 
@@ -35,7 +35,7 @@ Note the first column contains duplicated item, because the first row contains "
 	html = "&lt;html&gt;&lt;body&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;A&lt;/td&gt;&lt;td&gt;B&lt;/td&gt;&lt;/tr&gt;\
       &lt;tr&gt;&lt;td rowspan=\"2\"&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt; \
       &lt;tr&gt;&lt;td&gt;3&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;"
-    table = TableParser::Table.new(html, "/html/body/table", false)
+    table = TableParser::Table.new(html, "/html/body/table", {:dup_rows => false})
 </pre>
 
 Which result in following parsed table:
@@ -47,7 +47,7 @@ Table&lt;TableColumn&lt;name=A, children=[1],[1]&gt;,TableColumn&lt;name=B, chil
 
 == DEVELOPERS:
 
-* Francis Chong francis at ignition dot hk
+* Francis Chong, francis at ignition dot hk
 
 == LICENSE:
 
