@@ -1,28 +1,20 @@
-= table_parser
-
-* FIX (url)
+= TableParser
 
 == DESCRIPTION:
 
-FIX (describe your package)
-
-== FEATURES/PROBLEMS:
-
-* FIX (list of features or problems)
-
-== SYNOPSIS:
-
-  FIX (code sample of usage)
+TableParser parser HTML tables, and group them by columns. Rowspan is respected.
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* Nokogiri
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+* sudo gem install table_parser
 
 == DEVELOPERS:
+
+* Francis Chong francis at ignition dot hk
 
 After checking out the source, run:
 

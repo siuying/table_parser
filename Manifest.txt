@@ -3,6 +3,9 @@ History.txt
 Manifest.txt
 README.txt
 Rakefile
-bin/table_parser
 lib/table_parser.rb
+lib/table_parser/parser.rb
+lib/table_parser/table.rb
+lib/table_parser/table_header.rb
+lib/table_parser/table_node.rb
 test/test_table_parser.rb
