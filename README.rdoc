@@ -18,10 +18,11 @@ Parsing table could be difficult when its structure contains colspan or rowspan.
 Use TableParser::Table to create parsed HTML table.
 
 For example, following code:
-	table = TableParser::Table.new "<html><body><table><tr><td>A</td><td>B</td></tr>\
+	html = "<html><body><table><tr><td>A</td><td>B</td></tr>\
 	  <tr><td rowspan=\"2\">1</td><td>2</td></tr> \
-	  <tr><td>3</td></tr></table></body></html>", 
-	  "/html/body/table"
+	  <tr><td>3</td></tr></table></body></html>"
+	doc = Nokogiri::HTML(html)
+	table = TableParser::Table.new doc, "/html/body/table"
 
 Result in following parsed table:
 
@@ -29,10 +30,11 @@ Result in following parsed table:
 
 Note the first column contains duplicated item, because the first row contains "rowspan" element. If this is not desired, use following syntax to skip duplication:
 
-	table = TableParser::Table.new "<html><body><table><tr><td>A</td><td>B</td></tr>\
+	html = "<html><body><table><tr><td>A</td><td>B</td></tr>\
 	  <tr><td rowspan=\"2\">1</td><td>2</td></tr> \
-	  <tr><td>3</td></tr></table></body></html>", 
-	  "/html/body/table", {:dup_rows => false})
+	  <tr><td>3</td></tr></table></body></html>"
+	doc = Nokogiri::HTML(html)
+	table = TableParser::Table.new doc, "/html/body/table", {:dup_rows => false})
 
 Which result in following parsed table:
 

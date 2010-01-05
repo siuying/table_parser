@@ -5,9 +5,7 @@ require 'open-uri'
 module TableParser
   class Parser
     # extract_table("http://www.bs4.jp/table/index.html", "/html/body/table/tr/td/table")
-    def self.extract_table(input, xpath)
-      doc = Nokogiri::HTML(input)
-
+    def self.extract_table(doc, xpath)
       rows = []      
       table = doc.xpath(xpath)
       rows = table.xpath("./tr").collect do |row|
