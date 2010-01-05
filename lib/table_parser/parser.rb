@@ -18,14 +18,14 @@ module TableParser
       rows
     end
 
-    def self.extract_headers(rows)
+    def self.extract_column_headers(rows)
       headers = []
       rows.first.collect do |col|
-        header = TableHeader.new(col)
+        header = TableColumn.new(col)
         headers << header
 
         (header.colspan-1).times do
-          headers << TableHeader.new(col)
+          headers << TableColumn.new(col)
         end
       end
       rows.delete_at(0)

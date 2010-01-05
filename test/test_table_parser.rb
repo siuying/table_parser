@@ -8,7 +8,7 @@ class TestTableParser < Test::Unit::TestCase
       <tr><td>3</td></tr></table></body></html>", 
       "/html/body/table"
 
-    assert_equal(2, table.header_count, 'header_count should = 2 ')
+    assert_equal(2, table.columns.size, 'header_count should = 2 ')
     assert_equal(2, table[0].size)
     assert_equal(2, table[1].size)
   end
@@ -20,7 +20,7 @@ class TestTableParser < Test::Unit::TestCase
       <tr><td>A3</td><td>B3</td><td>C3</td></tr><tr><td>A4</td><td>B4</td><td>C4</td></tr></table></body></html>", 
       "/html/body/table"
 
-    assert_equal(3, table.header_count, 'header_count should = 3 ')
+    assert_equal(3, table.columns.size, 'header_count should = 3 ')
     assert_equal(4, table[0].size)
     assert_equal(4, table[1].size)
     assert_equal(4, table[2].size)
@@ -35,7 +35,7 @@ class TestTableParser < Test::Unit::TestCase
     </table></body></html>", 
       "/html/body/table"
       
-    assert_equal 4, table.header_count
+    assert_equal 4, table.columns.size
     assert_equal 3, table[0].size
     assert_equal 3, table[1].size
     assert_equal 3, table[2].size
@@ -55,7 +55,7 @@ class TestTableParser < Test::Unit::TestCase
     </table></body></html>", 
       "/html/body/table"
 
-    assert_equal 4, table.header_count
+    assert_equal 4, table.columns.size
     assert_equal 9, table[0].size
     assert_equal 9, table[1].size
     assert_equal 9, table[2].size
@@ -66,7 +66,7 @@ class TestTableParser < Test::Unit::TestCase
     table = TableParser::Table.new open("test.html").read, 
       "/html/body/table"
 
-    assert_equal 11, table.header_count
+    assert_equal 11, table.columns.size
     assert_equal 9, table[0].size
     assert_equal 9, table[1].size
     assert_equal 9, table[2].size

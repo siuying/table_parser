@@ -1,5 +1,5 @@
 module TableParser
-  class TableHeader < TableNode
+  class TableColumn < TableNode
     attr_reader :children
     def initialize(element, rowspan=nil, colspan=nil)
       super(element, rowspan, colspan)

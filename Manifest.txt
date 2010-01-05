@@ -6,6 +6,6 @@ Rakefile
 lib/table_parser.rb
 lib/table_parser/parser.rb
 lib/table_parser/table.rb
-lib/table_parser/table_header.rb
+lib/table_parser/table_column.rb
 lib/table_parser/table_node.rb
 test/test_table_parser.rb
