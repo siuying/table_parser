@@ -9,7 +9,6 @@ class TestTableParser < Test::Unit::TestCase
     doc = Nokogiri::HTML(html)
     table = TableParser::Table.new doc, "/html/body/table"
 
-    puts table
     assert_equal(2, table.columns.size, 'header_count should = 2 ')
     assert_equal(2, table[0].size)
     assert_equal(2, table[1].size)
@@ -20,7 +19,7 @@ class TestTableParser < Test::Unit::TestCase
       <tr><td rowspan=\"2\">1</td><td>2</td></tr> \
       <tr><td>3</td></tr></table></body></html>"
     doc = Nokogiri::HTML(html)
-    table = TableParser::Table.new doc, "/html/body/table", false
+    table = TableParser::Table.new doc, "/html/body/table", {:dup_rows => false}
 
     assert_equal(2, table.columns.size, 'header_count should = 2 ')
     assert_equal(1, table[0].size)
@@ -88,5 +87,15 @@ class TestTableParser < Test::Unit::TestCase
     assert_equal 9, table[1].size
     assert_equal 9, table[2].size
     assert_equal 9, table[3].size
+  end
+  
+  def test_parse_web2
+    doc = Nokogiri::HTML(open("test2.html").read)
+    
+    table = doc.xpath("//div[@id='timetable_box-week']/table")
+    table.xpath("./tr[1]").remove    
+
+    table = TableParser::Table.new doc, "//div[@id='timetable_box-week']/table", {:dup_cols => false, :dup_rows => false}
+    puts table.columns.select(){|c| c.text =~ /[0-9]+月[0-9]+日/ }
   end
 end

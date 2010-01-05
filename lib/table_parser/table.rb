@@ -1,10 +1,23 @@
 module TableParser
   class Table
     attr_reader :nodes, :columns
-    def initialize(doc, xpath_to_table="//table[0]", duplicate_colspan=true)
+    def initialize(doc, xpath_to_table="//table[0]", options={})
+      
+      if options.has_key?(:dup_rows)
+        dup_rows = options[:dup_rows]
+      else
+        dup_rows = true
+      end
+      
+      if options.has_key?(:dup_cols)
+        dup_cols = options[:dup_cols]
+      else
+        dup_cols = true
+      end
+
       table = Parser.extract_table(doc, xpath_to_table)
-      @columns = Parser.extract_column_headers(table)
-      @nodes = Parser.extract_nodes(table, @columns, duplicate_colspan)
+      @columns = Parser.extract_column_headers(table, dup_rows, dup_cols)      
+      @nodes = Parser.extract_nodes(table, @columns, dup_rows, dup_cols)
     end
   
     def to_s

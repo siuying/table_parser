@@ -4,5 +4,5 @@ require 'table_parser/table'
 require 'table_parser/parser'
 
 module TableParser
-  VERSION = '0.4.0'
+  VERSION = '0.5.2'
 end

@@ -16,7 +16,7 @@ module TableParser
       rows
     end
 
-    def self.extract_column_headers(rows)
+    def self.extract_column_headers(rows, dup_rows, dup_cols)
       headers = []
       rows.first.collect do |col|
         header = TableColumn.new(col)
@@ -30,7 +30,7 @@ module TableParser
       headers
     end
     
-    def self.extract_nodes(rows, headers, duplicate_colspan)
+    def self.extract_nodes(rows, headers, dup_rows, dup_cols)
       data = rows.collect do |row|
         row.collect do |ele|
           node = TableNode.new(ele)
@@ -42,19 +42,26 @@ module TableParser
         row = data[row_index]
         row.each_index do |col_index|
           col = row[col_index]
-          headers[col_index].children << col if col.class != EmptyTableNode
-          
-          if col.colspan > 1
-            col.insert(col_index, TableNode.new(col.element, col.rowspan, col.colspan - 1))
-          end
+          if headers[col_index]
+            headers[col_index].children << col if col.class != EmptyTableNode
+            if col.colspan > 1 
+              if dup_cols
+                row.insert(col_index, TableNode.new(col.element, col.rowspan, col.colspan - 1))
+              else
+                row.insert(col_index, EmptyTableNode.new(col.rowspan, col.colspan - 1))
+              end
+            end
 
-          if col.rowspan > 1 && data[row_index+1]
-            if duplicate_colspan
-              data[row_index+1].insert(col_index, TableNode.new(col.element, col.rowspan - 1))
-            else
-              data[row_index+1].insert(col_index, EmptyTableNode.new(col.rowspan - 1))
+            if col.rowspan > 1 && data[row_index+1]
+              if dup_rows
+                data[row_index+1].insert(col_index, TableNode.new(col.element, col.rowspan - 1))
+              else
+                data[row_index+1].insert(col_index, EmptyTableNode.new(col.rowspan - 1))
+              end
             end
           end
+          
+
         end
       end      
       data
