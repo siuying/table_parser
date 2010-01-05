@@ -4,21 +4,39 @@ require 'open-uri'
 
 module TableParser
   VERSION = '0.1.0'
+  
+  class TableNode
+    attr_reader :element, :text, :rowspan
+    def initialize(element, rowspan=nil)
+      @element = element
+      @text = element.text
+      
+      if rowspan
+        @rowspan = rowspan
+      else
+        @rowspan = element["rowspan"].to_i rescue 1
+      end
+    end
+    
+    def inspect
+      @text
+    end
+    
+    def to_s
+      @text
+    end
+  end
 
   class Parser
     def parse(input, xpath_to_table="//table[0]")
       table = extract_table(input, xpath_to_table)
-      
+            
       headers = extract_headers(table)
       contents = extract_content(table)
-      
+
       data = []
       headers.each do |h|
         data << {:name => h, :data => []}
-      end
-
-      contents.each do |row|
-        puts "row/#{row.length}"
       end
       
       contents   
@@ -35,7 +53,8 @@ module TableParser
         row.xpath("./td").collect do |col|
           col
         end
-      end
+      end  
+      rows
     end
 
     def extract_headers(rows)
@@ -47,24 +66,23 @@ module TableParser
     end
     
     def extract_content(rows)
-      data = rows.clone
-      for i in (0..data.length-1)
-        row = data[i]
-        for j in (0..row.length-1)
-          col = row[j]
-          if !col.nil? && col.class != String
-            rowspan = col["rowspan"].to_i rescue 1
-            row[j] = col.text || " "
-            if rowspan > 1
-              rowspan -= 1
-              for addrow in (1..rowspan)
-                data[i + addrow].insert(j+1, col.text)
-              end
-            end
-          end
-        end      
+      data = rows.collect do |row|
+        row.collect do |ele|
+          node = TableNode.new(ele)
+        end
       end
-      data[0..10]
+
+      data.each_index do |row_index|
+        row = data[row_index]
+        row.each_index do |col_index|
+          col = row[col_index]
+          if col.rowspan > 1 && data[row_index+1]
+            data[row_index+1].insert(col_index, TableNode.new(col.element, col.rowspan - 1))
+          end
+        end
+      end
+      
+      data
     end
     
   end
