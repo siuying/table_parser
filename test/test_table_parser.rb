@@ -13,6 +13,18 @@ class TestTableParser < Test::Unit::TestCase
     assert_equal(2, table[1].size)
   end
   
+  def test_parse_rowspan_disable_dup
+    table = TableParser::Table.new "<html><body><table><tr><td>A</td><td>B</td></tr>\
+      <tr><td rowspan=\"2\">1</td><td>2</td></tr> \
+      <tr><td>3</td></tr></table></body></html>", 
+      "/html/body/table", false
+    
+    puts table
+    assert_equal(2, table.columns.size, 'header_count should = 2 ')
+    assert_equal(1, table[0].size)
+    assert_equal(2, table[1].size)
+  end
+  
   def test_parse_colspan
     table = TableParser::Table.new "<html><body><table><tr><td>A</td><td colspan=\"2\">B</td></tr>\
       <tr><td rowspan=\"2\">A1</td><td>B1</td><td>C1</td></tr> \

@@ -32,7 +32,7 @@ module TableParser
       headers
     end
     
-    def self.extract_nodes(rows, headers)
+    def self.extract_nodes(rows, headers, duplicate_colspan)
       data = rows.collect do |row|
         row.collect do |ele|
           node = TableNode.new(ele)
@@ -44,18 +44,21 @@ module TableParser
         row = data[row_index]
         row.each_index do |col_index|
           col = row[col_index]
-          headers[col_index].children << col
+          headers[col_index].children << col if col.class != EmptyTableNode
           
           if col.colspan > 1
             col.insert(col_index, TableNode.new(col.element, col.rowspan, col.colspan - 1))
           end
 
           if col.rowspan > 1 && data[row_index+1]
-            data[row_index+1].insert(col_index, TableNode.new(col.element, col.rowspan - 1))
+            if duplicate_colspan
+              data[row_index+1].insert(col_index, TableNode.new(col.element, col.rowspan - 1))
+            else
+              data[row_index+1].insert(col_index, EmptyTableNode.new(col.rowspan - 1))
+            end
           end
         end
-      end
-      
+      end      
       data
     end
     
