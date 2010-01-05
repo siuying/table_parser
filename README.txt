@@ -2,7 +2,7 @@
 
 == DESCRIPTION:
 
-TableParser parser HTML tables, and group them by columns. Rowspan is respected.
+Parsing table could be difficult when its structure contains colspan or rowspan. TableParser parser HTML tables, group them by columns, with colspan and rowspan respected.
 
 == REQUIREMENTS:
 

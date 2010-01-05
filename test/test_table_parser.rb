@@ -2,15 +2,29 @@ require "test/unit"
 require "table_parser"
 
 class TestTableParser < Test::Unit::TestCase
-  def test_parse_simple
+  def test_parse_rowspan
     table = TableParser::Table.new "<html><body><table><tr><td>A</td><td>B</td></tr>\
       <tr><td rowspan=\"2\">1</td><td>2</td></tr> \
       <tr><td>3</td></tr></table></body></html>", 
       "/html/body/table"
 
     assert_equal(2, table.header_count, 'header_count should = 2 ')
-    assert_equal(2, table[0].size, 'number of col of row 1 = 2 ')
-    assert_equal(2, table[1].size, 'number of col of row 2 = 2 ')
+    assert_equal(2, table[0].size)
+    assert_equal(2, table[1].size)
+  end
+  
+  def test_parse_colspan
+    table = TableParser::Table.new "<html><body><table><tr><td>A</td><td colspan=\"2\">B</td></tr>\
+      <tr><td rowspan=\"2\">A1</td><td>B1</td><td>C1</td></tr> \
+      <tr><td>B2</td><td>C2</td></tr>\
+      <tr><td>A3</td><td>B3</td><td>C3</td></tr><tr><td>A4</td><td>B4</td><td>C4</td></tr></table></body></html>", 
+      "/html/body/table"
+
+    assert_equal(3, table.header_count, 'header_count should = 3 ')
+    assert_equal(4, table[0].size)
+    assert_equal(4, table[1].size)
+    assert_equal(4, table[2].size)
+
   end
   
   def test_parse_complex

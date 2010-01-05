@@ -1,8 +1,8 @@
 module TableParser
   class TableHeader < TableNode
     attr_reader :children
-    def initialize(element, rowspan=nil)
-      super(element, rowspan)
+    def initialize(element, rowspan=nil, colspan=nil)
+      super(element, rowspan, colspan)
       @children = []
     end
     
