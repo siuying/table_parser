@@ -9,7 +9,7 @@ class TestTableParser < Test::Unit::TestCase
       <tr><td>3</td></tr></table></body></html>", 
       "/html/body/table"
 
-    assert_equal(3, table.size, 'number of row should = 2 ' + table.join(","))
+    assert_equal(2, table.size, 'number of row should = 2 ' + table.join(","))
     assert_equal(2, table[0].size, 'number of col of row 1 = 2 ')
     assert_equal(2, table[1].size, 'number of col of row 2 = 2 ')
   end
@@ -23,11 +23,10 @@ class TestTableParser < Test::Unit::TestCase
     </table></body></html>", 
       "/html/body/table"
       
-    assert_equal 4, table.size
+    assert_equal 3, table.size
     assert_equal 4, table[0].size
     assert_equal 4, table[1].size
     assert_equal 4, table[2].size
-    assert_equal 4, table[3].size
   end
 
   def test_parse_complex2
@@ -47,7 +46,7 @@ class TestTableParser < Test::Unit::TestCase
       
     puts table.collect(){|r| r.collect(){|c| "#{c}"}.join(",") + "\n" }.join
 
-    assert_equal 10, table.size
+    assert_equal 9, table.size
     assert_equal 4, table[0].size
     assert_equal 4, table[1].size
     assert_equal 4, table[2].size
@@ -57,7 +56,6 @@ class TestTableParser < Test::Unit::TestCase
     assert_equal 4, table[6].size
     assert_equal 4, table[7].size
     assert_equal 4, table[8].size
-    assert_equal 4, table[9].size
   end
   
   def test_parse_web
