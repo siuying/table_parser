@@ -40,9 +40,7 @@ class TestTableParser < Test::Unit::TestCase
     <tr><td>I2</td><td>I3</td><td>I4</td></tr>\
     </table></body></html>", 
       "/html/body/table"
-      
-    puts table.to_s
-    
+
     assert_equal 4, table.header_count
     assert_equal 9, table[0].size
     assert_equal 9, table[1].size
@@ -54,6 +52,10 @@ class TestTableParser < Test::Unit::TestCase
     table = TableParser::Table.new open("test.html").read, 
       "/html/body/table"
 
-    puts table.to_s
+    assert_equal 11, table.header_count
+    assert_equal 9, table[0].size
+    assert_equal 9, table[1].size
+    assert_equal 9, table[2].size
+    assert_equal 9, table[3].size
   end
 end
