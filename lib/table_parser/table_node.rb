@@ -11,13 +11,9 @@ module TableParser
         @rowspan = element["rowspan"].to_i rescue 1
       end
     end
-  
-    def inspect
-      @text
-    end
-  
+
     def to_s
-      @text
+      "[#{@text}]"
     end
   end
 end

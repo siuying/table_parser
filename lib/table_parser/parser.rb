@@ -4,23 +4,8 @@ require 'open-uri'
 
 module TableParser
   class Parser
-    def parse(input, xpath_to_table="//table[0]")
-      table = extract_table(input, xpath_to_table)
-            
-      headers = extract_headers(table)
-      contents = extract_content(table)
-
-      data = []
-      headers.each do |h|
-        data << {:name => h, :data => []}
-      end
-      
-      contents   
-    end
-
-    private    
     # extract_table("http://www.bs4.jp/table/index.html", "/html/body/table/tr/td/table")
-    def extract_table(input, xpath)
+    def self.extract_table(input, xpath)
       doc = Nokogiri::HTML(input)
 
       rows = []      
@@ -33,7 +18,7 @@ module TableParser
       rows
     end
 
-    def extract_headers(rows)
+    def self.extract_headers(rows)
       headers = []
       rows.first.collect do |col|
         headers << TableHeader.new(col)
@@ -42,7 +27,7 @@ module TableParser
       headers
     end
     
-    def extract_content(rows)
+    def self.extract_nodes(rows, headers)
       data = rows.collect do |row|
         row.collect do |ele|
           node = TableNode.new(ele)
@@ -53,6 +38,7 @@ module TableParser
         row = data[row_index]
         row.each_index do |col_index|
           col = row[col_index]
+          headers[col_index].children << col
           if col.rowspan > 1 && data[row_index+1]
             data[row_index+1].insert(col_index, TableNode.new(col.element, col.rowspan - 1))
           end
