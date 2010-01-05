@@ -1,4 +1,4 @@
-h1. TableParser
+= TableParser
 
 == DESCRIPTION:
 
@@ -37,6 +37,8 @@ Note the first column contains duplicated item, because the first row contains "
 Which result in following parsed table:
 
   Table<TableColumn<name=A, children=[1]>,TableColumn<name=B, children=[2],[3]>>
+
+Read the spec (test/test_table_parser.rb) for more usage.
 
 == DEVELOPERS:
 
