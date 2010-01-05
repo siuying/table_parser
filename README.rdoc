@@ -18,32 +18,25 @@ Parsing table could be difficult when its structure contains colspan or rowspan.
 Use TableParser::Table to create parsed HTML table.
 
 For example, following code:
-<pre>
-	html = "&lt;html&gt;&lt;body&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;A&lt;/td&gt;&lt;td&gt;B&lt;/td&gt;&lt;/tr&gt;\
-      &lt;tr&gt;&lt;td rowspan=\"2\"&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt; \
-      &lt;tr&gt;&lt;td&gt;3&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;"
-    table = TableParser::Table.new(html, "/html/body/table")
-</pre>
+	table = TableParser::Table.new "<html><body><table><tr><td>A</td><td>B</td></tr>\
+	  <tr><td rowspan=\"2\">1</td><td>2</td></tr> \
+	  <tr><td>3</td></tr></table></body></html>", 
+	  "/html/body/table"
 
 Result in following parsed table:
 
-<pre>
-Table&lt;TableColumn&lt;name=A, children=[1],[1]&gt;,TableColumn&lt;name=B, children=[2],[3]&gt;&gt;
-</pre>
+  Table<TableColumn<name=A, children=[1],[1]>,TableColumn<name=B, children=[2],[3]>>
+
 Note the first column contains duplicated item, because the first row contains "rowspan" element. If this is not desired, use following syntax to skip duplication:
-<pre>
-	html = "&lt;html&gt;&lt;body&gt;&lt;table&gt;&lt;tr&gt;&lt;td&gt;A&lt;/td&gt;&lt;td&gt;B&lt;/td&gt;&lt;/tr&gt;\
-      &lt;tr&gt;&lt;td rowspan=\"2\"&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;/tr&gt; \
-      &lt;tr&gt;&lt;td&gt;3&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;"
-    table = TableParser::Table.new(html, "/html/body/table", {:dup_rows => false})
-</pre>
+
+	table = TableParser::Table.new "<html><body><table><tr><td>A</td><td>B</td></tr>\
+	  <tr><td rowspan=\"2\">1</td><td>2</td></tr> \
+	  <tr><td>3</td></tr></table></body></html>", 
+	  "/html/body/table", {:dup_rows => false})
 
 Which result in following parsed table:
 
-<pre>
-Table&lt;TableColumn&lt;name=A, children=[1],[1]&gt;,TableColumn&lt;name=B, children=[2],[3]&gt;&gt;
-</pre>
-
+  Table<TableColumn<name=A, children=[1]>,TableColumn<name=B, children=[2],[3]>>
 
 == DEVELOPERS:
 
