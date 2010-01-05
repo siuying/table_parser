@@ -8,7 +8,7 @@ module TableParser
     end
   
     def to_s
-      "Table<#{@columns.collect{|h| h.to_s }.join("\n")}>"
+      "Table<#{@columns.collect{|h| h.to_s }.join(",")}>"
     end
 
     # get column by index

@@ -15,7 +15,7 @@ module TableParser
     end
     
     def to_s
-      "[name=#{text}, children=#{@children.collect{|c| c.to_s }.join(",")}]"
+      "TableColumn<name=#{text}, children=#{@children.collect{|c| c.to_s }.join(",")}>"
     end
     
   end

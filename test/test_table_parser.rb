@@ -8,6 +8,7 @@ class TestTableParser < Test::Unit::TestCase
       <tr><td>3</td></tr></table></body></html>", 
       "/html/body/table"
 
+    puts table
     assert_equal(2, table.columns.size, 'header_count should = 2 ')
     assert_equal(2, table[0].size)
     assert_equal(2, table[1].size)
