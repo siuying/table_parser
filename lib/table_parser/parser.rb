@@ -70,8 +70,6 @@ module TableParser
               end
             end
           end
-          
-
         end
       end      
       data

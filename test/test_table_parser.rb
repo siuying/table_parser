@@ -1,5 +1,6 @@
 require "test/unit"
 require "table_parser"
+require 'iconv'
 
 class TestTableParser < Test::Unit::TestCase
   def test_parse_rowspan
@@ -77,28 +78,7 @@ class TestTableParser < Test::Unit::TestCase
     assert_equal 9, table[2].size
     assert_equal 9, table[3].size
   end
-  
-  def test_parse_web
-    doc = Nokogiri::HTML(open("test.html").read)
-    table = TableParser::Table.new doc, "/html/body/table"
 
-    assert_equal 11, table.columns.size
-    assert_equal 9, table[0].size
-    assert_equal 9, table[1].size
-    assert_equal 9, table[2].size
-    assert_equal 9, table[3].size
-  end
-  
-  def test_parse_web2
-    doc = Nokogiri::HTML(open("test2.html").read)
-    
-    table = doc.xpath("//div[@id='timetable_box-week']/table")
-    table.xpath("./tr[1]").remove    
-
-    table = TableParser::Table.new doc, "//div[@id='timetable_box-week']/table", {:dup_cols => false, :dup_rows => false}
-
-  end
-  
   def test_parse_noheader
     html = "<html><body><table><tr><td>A</td><td>B</td></tr>\
       <tr><td rowspan=\"2\">1</td><td>2</td></tr> \
@@ -110,4 +90,5 @@ class TestTableParser < Test::Unit::TestCase
     assert_equal(3, table[0].size)
     assert_equal(3, table[1].size)
   end
+  
 end
