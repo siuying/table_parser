@@ -16,17 +16,27 @@ module TableParser
       rows
     end
 
-    def self.extract_column_headers(rows, dup_rows, dup_cols)
+    def self.extract_column_headers(rows, dup_rows, dup_cols, has_header)
       headers = []
-      rows.first.collect do |col|
-        header = TableColumn.new(col)
-        headers << header
 
-        (header.colspan-1).times do
-          headers << TableColumn.new(col)
+      if has_header
+        rows.first.collect do |col|
+          header = TableColumn.new(col)
+          headers << header
+          (header.colspan-1).times do
+            headers << TableColumn.new(col)
+          end
+        end
+        rows.delete_at(0)
+      else
+        rows.first.collect do |col|
+          header = TableColumn.new(nil)
+          headers << header
+          (header.colspan-1).times do
+            headers << TableColumn.new(nil)
+          end
         end
       end
-      rows.delete_at(0)
       headers
     end
     

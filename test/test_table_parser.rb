@@ -96,6 +96,18 @@ class TestTableParser < Test::Unit::TestCase
     table.xpath("./tr[1]").remove    
 
     table = TableParser::Table.new doc, "//div[@id='timetable_box-week']/table", {:dup_cols => false, :dup_rows => false}
-    puts table.columns.select(){|c| c.text =~ /[0-9]+月[0-9]+日/ }
+
+  end
+  
+  def test_parse_noheader
+    html = "<html><body><table><tr><td>A</td><td>B</td></tr>\
+      <tr><td rowspan=\"2\">1</td><td>2</td></tr> \
+      <tr><td>3</td></tr></table></body></html>"
+    doc = Nokogiri::HTML(html)
+    table = TableParser::Table.new doc, "/html/body/table", {:header => false}
+
+    assert_equal(2, table.columns.size, 'header_count should = 2 ')
+    assert_equal(3, table[0].size)
+    assert_equal(3, table[1].size)
   end
 end

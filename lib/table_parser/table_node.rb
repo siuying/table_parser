@@ -3,7 +3,7 @@ module TableParser
     attr_reader :element, :text, :rowspan, :colspan
     def initialize(element, rowspan=nil, colspan=nil)
       @element = element
-      @text = element.text.strip     
+      @text = element.text.strip rescue ""     
       @colspan = colspan || element["colspan"].to_i rescue 1
       @rowspan = rowspan || element["rowspan"].to_i rescue 1
     end
