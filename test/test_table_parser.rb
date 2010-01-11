@@ -91,4 +91,14 @@ class TestTableParser < Test::Unit::TestCase
     assert_equal(3, table[1].size)
   end
   
+  
+  def test_web
+    html = open("test4.html").read
+    html.gsub!(/<!--.*-->/, "");   
+
+    doc = Nokogiri::HTML::Document.parse(html)
+    doc.xpath("//img").remove
+    table = TableParser::Table.new doc, "/html/body/div/div[3]/div/div[2]/table", {:header => false, :dup_rows => false}
+    puts table.columns[2].size
+  end
 end
