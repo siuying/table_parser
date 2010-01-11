@@ -1,6 +1,7 @@
 require "test/unit"
 require "table_parser"
 require 'iconv'
+require 'open-uri'
 
 class TestTableParser < Test::Unit::TestCase
   def test_parse_rowspan
@@ -28,18 +29,27 @@ class TestTableParser < Test::Unit::TestCase
   end
   
   def test_parse_colspan
-    html = "<html><body><table><tr><td>A</td><td colspan=\"2\">B</td></tr>\
+    html = "<html><body><table>\
+      <tr><td>A</td><td colspan=\"2\">B</td></tr>\
       <tr><td rowspan=\"2\">A1</td><td>B1</td><td>C1</td></tr> \
       <tr><td>B2</td><td>C2</td></tr>\
-      <tr><td>A3</td><td>B3</td><td>C3</td></tr><tr><td>A4</td><td>B4</td><td>C4</td></tr></table></body></html>"
+      <tr><td>A3</td><td>B3</td><td>C3</td></tr>\
+      <tr><td>A4</td><td colspan=\"2\" rowspan=\"2\">B4</td></tr>\
+      <tr><td>A5</td></tr>\
+      <tr><td rowspan=\"2\">A1</td><td>B1</td><td>C1</td></tr> \
+      <tr><td>B2</td><td>C2</td></tr>\
+      <tr><td>A3</td><td>B3</td><td>C3</td></tr>\
+      <tr><td>A4</td><td colspan=\"2\" rowspan=\"2\">B4</td></tr>\
+      <tr><td>A5</td></tr>\
+      </table></body></html>"
     doc = Nokogiri::HTML(html)
     table = TableParser::Table.new doc, "/html/body/table"
+    puts table
 
     assert_equal(3, table.columns.size, 'header_count should = 3 ')
-    assert_equal(4, table[0].size)
-    assert_equal(4, table[1].size)
-    assert_equal(4, table[2].size)
-
+    assert_equal(10, table[0].size)
+    assert_equal(10, table[1].size)
+    assert_equal(10, table[2].size)
   end
   
   def test_parse_complex
@@ -94,11 +104,8 @@ class TestTableParser < Test::Unit::TestCase
   
   def test_web
     html = open("test4.html").read
-    html.gsub!(/<!--.*-->/, "");   
-
-    doc = Nokogiri::HTML::Document.parse(html)
-    doc.xpath("//img").remove
+    doc = Nokogiri::HTML::Document.parse(html, nil, "Shift_JIS")
     table = TableParser::Table.new doc, "/html/body/div/div[3]/div/div[2]/table", {:header => false, :dup_rows => false}
-    puts table.columns[2].size
+    puts table.columns[0].size
   end
 end
