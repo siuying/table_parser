@@ -46,8 +46,6 @@ module TableParser
           node = TableNode.new(ele)
         end
       end
-
-      puts " data/length = #{data.size}"
               
       # handle rowspan
       data.each_index do |row_index|
@@ -65,11 +63,11 @@ module TableParser
               end
             end
             
-            if col.rowspan > 1 && data[row_index].size > 0
+            if col.rowspan > 1 && data[row_index+1]
               if dup_rows
-                data[row_index].insert(col_index, TableNode.new(col.element, col.rowspan - 1))
+                data[row_index+1].insert(col_index, TableNode.new(col.element, col.rowspan - 1))
               else
-                data[row_index].insert(col_index, EmptyTableNode.new(col.rowspan - 1))
+                data[row_index+1].insert(col_index, EmptyTableNode.new(col.rowspan - 1))
               end
             end
           end
