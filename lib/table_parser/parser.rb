@@ -23,7 +23,8 @@ module TableParser
         rows.first.collect do |col|
           header = TableColumn.new(col)
           headers << header
-          (header.colspan-1).times do
+          colspan = col["colspan"].to_i rescue 1
+          (colspan-1).times do
             headers << TableColumn.new(col)
           end
         end
@@ -32,7 +33,8 @@ module TableParser
         rows.first.collect do |col|
           header = TableColumn.new(nil)
           headers << header
-          (header.colspan-1).times do
+          colspan = col["colspan"].to_i rescue 1
+          (colspan-1).times do
             headers << TableColumn.new(nil)
           end
         end
