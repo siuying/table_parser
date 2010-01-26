@@ -126,6 +126,15 @@ class TestTableParser < Test::Unit::TestCase
     assert_equal(4, table[3].size)
     assert_equal(5, table[4].size)
     
+    table = TableParser::Table.new doc, "/html/body/table", {:dup_cols => false, :dup_rows => true}
+    puts table
+    assert_equal(5, table.columns.size, 'header_count should = 5 ')
+    assert_equal(5, table[0].size)
+    assert_equal(5, table[1].size)
+    assert_equal(3, table[2].size)
+    assert_equal(5, table[3].size)
+    assert_equal(5, table[4].size)
+    
     table = TableParser::Table.new doc, "/html/body/table", {:dup_cols => true, :dup_rows => true}
     puts table
     assert_equal(5, table.columns.size, 'header_count should = 5 ')
