@@ -5,15 +5,28 @@ require 'open-uri'
 
 class TestTableParser < Test::Unit::TestCase
   def test_parse_rowspan
-    html = "<html><body><table><tr><td>A</td><td>B</td></tr>\
-      <tr><td rowspan=\"2\">1</td><td>2</td></tr> \
-      <tr><td>3</td></tr></table></body></html>"
+    html = open("rowspan.html").read
     doc = Nokogiri::HTML(html)
-    table = TableParser::Table.new doc, "/html/body/table"
-
+    table = TableParser::Table.new doc, "/html/body/table", {:dup_rows => false, :dup_cols => false}
     assert_equal(2, table.columns.size, 'header_count should = 2 ')
     assert_equal(2, table[0].size)
     assert_equal(2, table[1].size)
+
+    table = TableParser::Table.new doc, "/html/body/table", {:dup_rows => true, :dup_cols => false}
+    assert_equal(2, table.columns.size, 'header_count should = 2 ')
+    assert_equal(3, table[0].size)
+    assert_equal(3, table[1].size)
+    
+    table = TableParser::Table.new doc, "/html/body/table", {:dup_rows => false, :dup_cols => true}
+    assert_equal(2, table.columns.size, 'header_count should = 2 ')
+    assert_equal(2, table[0].size)
+    assert_equal(2, table[1].size)
+
+    table = TableParser::Table.new doc, "/html/body/table", {:dup_rows => true, :dup_cols => true}
+    assert_equal(2, table.columns.size, 'header_count should = 2 ')
+    assert_equal(3, table[0].size)
+    assert_equal(3, table[1].size)
+
   end
   
   def test_parse_rowspan_disable_dup
