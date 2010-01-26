@@ -42,44 +42,52 @@ module TableParser
       headers
     end
     
-    def self.extract_nodes(rows, headers, dup_rows, dup_cols)
-      data = rows.collect do |row|
+    def self.extract_nodes(input_rows, headers, dup_rows, dup_cols)
+      data = input_rows.collect do |row|
         row.collect do |ele|
           node = TableNode.new(ele)
         end
       end
-              
-      # handle rowspan
-      data.each_index do |row_index|
-        row = data[row_index]
-        row.each_index do |col_index|
-          col = row[col_index]
-          if headers[col_index]
-            headers[col_index].children << col if col.class != EmptyTableNode
+      
+      columns = []
+      curr_x = 0
+      curr_y = 0
+      data.each do |row|
+        columns[curr_y] = [] unless columns[curr_y]
 
-            if col.colspan > 1 
-              if dup_cols
-                row.insert(col_index, TableNode.new(col.element, col.rowspan, col.colspan - 1))
-              else
-                row.insert(col_index, EmptyTableNode.new(col.rowspan, col.colspan - 1))
-              end
-            end
-            
-            if col.rowspan > 1
-              unless data[row_index+1]
-                data.insert(row_index, [])
-              end
+        curr_y = 0
+        while columns[curr_y][curr_x]
+          curr_y += 1
+        end
 
-              if dup_rows
-                data[row_index+1].insert(col_index, TableNode.new(col.element, col.rowspan - 1))
+        row.each do |node|
+          rowspan = node.rowspan - 1
+          colspan = node.colspan - 1
+
+          (0..rowspan).each do |x|
+            (0..colspan).each do |y|
+              columns[curr_y+y] = [] unless columns[curr_y+y]
+              if (x == 0 || dup_rows) && (y == 0 || dup_cols)
+                columns[curr_y+y][curr_x+x] = node
               else
-                data[row_index+1].insert(col_index, EmptyTableNode.new(col.rowspan - 1))
+                columns[curr_y+y][curr_x+x] = EmptyTableNode.new(node.element)
               end
             end
           end
+          curr_y += 1
         end
-      end      
-      data
+        curr_x += 1
+      end
+            
+      columns.each_index do |col_index|
+        columns[col_index].each do |node|
+          if headers[col_index]
+            headers[col_index].children << node unless node.class == EmptyTableNode
+          end
+        end
+      end
+         
+      columns
     end
     
   end
