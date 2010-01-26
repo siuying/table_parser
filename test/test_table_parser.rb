@@ -29,27 +29,27 @@ class TestTableParser < Test::Unit::TestCase
   end
   
   def test_parse_colspan
-    html = "<html><body><table>\
-      <tr><td>A</td><td colspan=\"2\">B</td></tr>\
-      <tr><td rowspan=\"2\">A1</td><td>B1</td><td>C1</td></tr> \
-      <tr><td>B2</td><td>C2</td></tr>\
-      <tr><td>A3</td><td>B3</td><td>C3</td></tr>\
-      <tr><td>A4</td><td colspan=\"2\" rowspan=\"2\">B4</td></tr>\
-      <tr><td>A5</td></tr>\
-      <tr><td rowspan=\"2\">A1</td><td>B1</td><td>C1</td></tr> \
-      <tr><td>B2</td><td>C2</td></tr>\
-      <tr><td>A3</td><td>B3</td><td>C3</td></tr>\
-      <tr><td>A4</td><td colspan=\"2\" rowspan=\"2\">B4</td></tr>\
-      <tr><td>A5</td></tr>\
-      </table></body></html>"
+    html = open("colspan.html").read
     doc = Nokogiri::HTML(html)
     table = TableParser::Table.new doc, "/html/body/table"
-    puts table
-
     assert_equal(3, table.columns.size, 'header_count should = 3 ')
     assert_equal(10, table[0].size)
     assert_equal(10, table[1].size)
     assert_equal(10, table[2].size)
+
+    table = TableParser::Table.new doc, "/html/body/table", {:dup_rows => false}
+    puts table.to_s
+    assert_equal(3, table.columns.size, 'header_count should = 3 ')
+    assert_equal(8, table[0].size)
+    assert_equal(8, table[1].size)
+    assert_equal(8, table[2].size)
+
+    table = TableParser::Table.new doc, "/html/body/table", {:dup_rows => false, :dup_cols => false}
+    puts table.to_s
+    assert_equal(3, table.columns.size, 'header_count should = 3 ')
+    assert_equal(8, table[0].size)
+    assert_equal(8, table[1].size)
+    assert_equal(6, table[2].size)
   end
   
   def test_parse_complex
@@ -102,13 +102,7 @@ class TestTableParser < Test::Unit::TestCase
   end
   
   def test_parse_complex_colrowspan
-    html = "<html><body><table><tr><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td></tr>\
-      <tr><td rowspan=\"5\">1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr> \
-      <tr><td rowspan=\"2\">2b</td><td>3d</td><td>4d</td><td>5b</td></tr> \
-      <tr><td>3c</td><td rowspan=\"2\">4c</td><td>5c</td></tr>\
-      <tr><td rowspan=\"2\">2d</td><td>3d</td><td>5d</td></tr>\
-      <tr><td>3e</td><td>4e</td><td>5e</td></tr>\
-      </table></body></html>"
+    html = open("table_rowcol.html").read
 
     doc = Nokogiri::HTML(html)
     table = TableParser::Table.new doc, "/html/body/table", {:dup_cols => false, :dup_rows => false}
@@ -116,9 +110,20 @@ class TestTableParser < Test::Unit::TestCase
     assert_equal(5, table.columns.size, 'header_count should = 5 ')
     assert_equal(1, table[0].size)
     assert_equal(3, table[1].size)
-    assert_equal(5, table[2].size)
+    assert_equal(3, table[2].size)
     assert_equal(4, table[3].size)
     assert_equal(5, table[4].size)
+    
+    table = TableParser::Table.new doc, "/html/body/table", {:dup_cols => true, :dup_rows => false}
+    puts table
+    assert_equal(5, table.columns.size, 'header_count should = 5 ')
+    assert_equal(1, table[0].size)
+    assert_equal(3, table[1].size)
+    assert_equal(3, table[2].size)
+    assert_equal(4, table[3].size)
+    assert_equal(5, table[4].size)
+    
+    
   end
   
   def test_web
