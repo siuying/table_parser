@@ -4,8 +4,8 @@ module TableParser
     def initialize(element, rowspan=nil, colspan=nil)
       @element = element
       @text = element.text.strip rescue ""     
-      @colspan = colspan || element["colspan"].to_i rescue 1
-      @rowspan = rowspan || element["rowspan"].to_i rescue 1
+      @colspan = colspan || element["colspan"].nil? ? 1 : element["colspan"].to_i
+      @rowspan = rowspan || element["rowspan"].nil? ? 1 : element["rowspan"].to_i
     end
 
     def to_s
@@ -17,8 +17,8 @@ module TableParser
     def initialize(rowspan=nil, colspan=nil)
       @element = nil
       @text = ""
-      @colspan = colspan || element["colspan"].to_i rescue 1
-      @rowspan = rowspan || element["rowspan"].to_i rescue 1
+      @colspan = colspan || 1
+      @rowspan = rowspan || 1
     end
   end
 end
