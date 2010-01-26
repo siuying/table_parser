@@ -56,10 +56,6 @@ module TableParser
         columns[curr_y] = [] unless columns[curr_y]
 
         curr_y = 0
-        while columns[curr_y][curr_x]
-          curr_y += 1
-        end
-
         row.each do |node|
           rowspan = node.rowspan - 1
           colspan = node.colspan - 1
@@ -68,8 +64,14 @@ module TableParser
             (0..colspan).each do |y|
               columns[curr_y+y] = [] unless columns[curr_y+y]
               if (x == 0 || dup_rows) && (y == 0 || dup_cols)
+                while columns[curr_y+y][curr_x+x]
+                  curr_y += 1
+                end
                 columns[curr_y+y][curr_x+x] = node
               else
+                while columns[curr_y+y][curr_x+x]
+                  curr_y += 1
+                end
                 columns[curr_y+y][curr_x+x] = EmptyTableNode.new(node.element)
               end
             end

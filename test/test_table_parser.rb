@@ -81,17 +81,7 @@ class TestTableParser < Test::Unit::TestCase
   end
 
   def test_parse_complex2
-    html = "<html><body><table><tr><td>Header1</td><td>Header2</td><td>Header3</td><td>Header4</td></tr>\
-      <tr><td rowspan=\"3\">A1</td><td>A2</td><td rowspan=\"2\">A3</td><td>A4</td></tr>\
-      <tr><td>B2</td><td>B4</td></tr>\
-      <tr><td>C2</td><td rowspan=\"2\">C3</td><td>C4</td></tr>\
-      <tr><td rowspan=\"3\">D1</td><td>D2</td><td>D4</td></tr>\
-      <tr><td>E2</td><td rowspan=\"2\">E3</td><td>E4</td></tr>\
-      <tr><td>F2</td><td>F4</td></tr>\
-      <tr><td rowspan=\"3\">G1</td><td>G2</td><td rowspan=\"2\">G3</td><td>G4</td></tr>\
-      <tr><td>H2</td><td>H4</td></tr>\
-      <tr><td>I2</td><td>I3</td><td>I4</td></tr>\
-      </table></body></html>"
+    html = open("complex2.html").read
     doc = Nokogiri::HTML(html)
     table = TableParser::Table.new doc, "/html/body/table"
 
@@ -100,6 +90,15 @@ class TestTableParser < Test::Unit::TestCase
     assert_equal 9, table[1].size
     assert_equal 9, table[2].size
     assert_equal 9, table[3].size
+    
+    table = TableParser::Table.new doc, "/html/body/table", {:dup_rows => false}
+    puts "table=" + table.to_s
+    assert_equal 4, table.columns.size
+    assert_equal 3, table[0].size
+    assert_equal 9, table[1].size
+    assert_equal 5, table[2].size
+    assert_equal 9, table[3].size
+
   end
 
   def test_parse_noheader
@@ -127,16 +126,14 @@ class TestTableParser < Test::Unit::TestCase
     assert_equal(4, table[3].size)
     assert_equal(5, table[4].size)
     
-    table = TableParser::Table.new doc, "/html/body/table", {:dup_cols => true, :dup_rows => false}
+    table = TableParser::Table.new doc, "/html/body/table", {:dup_cols => true, :dup_rows => true}
     puts table
     assert_equal(5, table.columns.size, 'header_count should = 5 ')
-    assert_equal(1, table[0].size)
-    assert_equal(3, table[1].size)
-    assert_equal(3, table[2].size)
-    assert_equal(4, table[3].size)
+    assert_equal(5, table[0].size)
+    assert_equal(5, table[1].size)
+    assert_equal(5, table[2].size)
+    assert_equal(5, table[3].size)
     assert_equal(5, table[4].size)
-    
-    
   end
   
   def test_web
