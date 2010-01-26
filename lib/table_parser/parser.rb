@@ -65,7 +65,11 @@ module TableParser
               end
             end
             
-            if col.rowspan > 1 && data[row_index+1]
+            if col.rowspan > 1
+              unless data[row_index+1]
+                data.insert(row_index, [])
+              end
+
               if dup_rows
                 data[row_index+1].insert(col_index, TableNode.new(col.element, col.rowspan - 1))
               else
