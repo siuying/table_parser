@@ -65,7 +65,9 @@ module TableParser
               columns[curr_y+y] = [] unless columns[curr_y+y]
               while columns[curr_y+y][curr_x+x]
                 curr_y += 1
+                columns[curr_y+y] = [] unless columns[curr_y+y]
               end
+
               if (x == 0 || dup_rows) && (y == 0 || dup_cols)
                 columns[curr_y+y][curr_x+x] = node
               else
