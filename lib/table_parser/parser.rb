@@ -9,7 +9,7 @@ module TableParser
       rows = []      
       table = doc.xpath(xpath)
       rows = table.xpath("./tr").collect do |row|
-        row.xpath("./td").collect do |col|
+        row.xpath("./td|./th").collect do |col|
           col
         end
       end  
