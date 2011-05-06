@@ -8,8 +8,8 @@ module TableParser
     def self.extract_table(doc, xpath)
       rows = []      
       table = doc.xpath(xpath)
-      rows = table.xpath("./thead/tr|./tr").collect do |row|
-        row.xpath("./td|./th|./tbody/tr|./tbody/th").collect do |col|
+      rows = table.xpath("./thead/tr|./tr|./tbody/tr").collect do |row|
+        row.xpath("./td|./th").collect do |col|
           col
         end
       end  
